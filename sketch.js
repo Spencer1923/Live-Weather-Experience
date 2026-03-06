@@ -211,6 +211,7 @@ function setup() {
       key;
     loadJSON(url, (data) => {
       weatherData = data;
+      resetVisuals(); //clears canvas
       let weatherId = weatherData.weather[0].id;
       if (weatherId >= 200 && weatherId <= 232) {
         weatherCondition = "thunder";
@@ -239,11 +240,12 @@ function setup() {
         sounds[weatherCondition].loop();
       }
 
+      resetVisuals();
       //initilaize visualize functions
       initWind();
       initHumidity();
       initPrecipitation();
-      console.log(weatherData); //logs the JSON data
+      //console.log(weatherData); //logs the JSON data
       displayTime = convertLocalTime(weatherData.dt, weatherData.timezone);
       displayCity = weatherData.name;
     });
@@ -763,6 +765,7 @@ function fetchTour() {
     key;
   loadJSON(url, (data) => {
     weatherData = data;
+    resetVisuals(); //clears canvas
     let weatherId = weatherData.weather[0].id;
     if (weatherId >= 200 && weatherId <= 232) {
       weatherCondition = "thunder";
@@ -789,6 +792,7 @@ function fetchTour() {
     } else if (sounds[weatherCondition]) {
       sounds[weatherCondition].loop();
     }
+    resetVisuals();
     initWind();
     initHumidity();
     initPrecipitation();
@@ -797,4 +801,11 @@ function fetchTour() {
   });
 
   lastTourTime = millis();
+}
+
+//to clear canvas
+function resetVisuals() {
+  windLines = [];
+  precipitation = [];
+  humidityDroplets = [];
 }
