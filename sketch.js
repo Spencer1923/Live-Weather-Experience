@@ -144,7 +144,6 @@ function setup() {
 
   //default value is toronto
   latInput = createInput("43.6532");
-  latInput.style("margin-bottom", "7px");
   lonInput = createInput("-79.3832");
 
   //button to randomize weather data
@@ -157,6 +156,7 @@ function setup() {
   let cityBtn = createButton("City Tour");
   let randomTourBtn = createButton("Random Tour");
   let timeZoneBtn = createButton("Time Zone Tour");
+
 
   cityBtn.mousePressed(() => {
     tourMode = "city";
@@ -175,15 +175,14 @@ function setup() {
 
   //User interactivity
   // chaos slider and speed slider
-  let chaosLabel = createP("Control Chaos Slider and API Interval Fetch Speed");
-  chaosLabel.style("font-size", "13px"); //sets text size
-  chaosLabel.style("margin", "0px"); //sets margin
+  let chaosLabel = createSpan("Chaos Slider: ");
   let chaosSlider = createSlider(0, 1, 0, 0.01);
-  let speedSlider = createSlider(5000, 60000, 30000, 1000); //put speed slider here for ordering
   chaosSlider.input(() => {
     chaos = chaosSlider.value();
   });
 
+  let speedLabel = createSpan("API Intervals: ");
+  let speedSlider = createSlider(5000, 60000, 30000, 1000); //put speed slider here for ordering
   speedSlider.input(() => {
     tourInterval = speedSlider.value();
   });
@@ -288,7 +287,6 @@ function setup() {
 }
 
 function draw() {
-  background(0);
   //check if its loaded
   if (weatherData) {
     //gets data form JSON
