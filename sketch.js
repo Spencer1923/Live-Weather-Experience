@@ -126,6 +126,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight); //size is whole window
+  document.body.style.background = "white";//i added this to stop overlay bleeding
   userStartAudio(); //had to add this so sound auto starts playing
 
   //default value is toronto
@@ -200,6 +201,10 @@ function setup() {
 
   //callback function
   btn.mousePressed(() => {
+    //disable current tour
+    tourPaused = true;
+    tourMode = "none";
+
     lat = float(latInput.value());
     lon = float(lonInput.value());
     let url =
@@ -211,7 +216,6 @@ function setup() {
       key;
     loadJSON(url, (data) => {
       weatherData = data;
-      resetVisuals(); //clears canvas
       let weatherId = weatherData.weather[0].id;
       if (weatherId >= 200 && weatherId <= 232) {
         weatherCondition = "thunder";
@@ -765,7 +769,6 @@ function fetchTour() {
     key;
   loadJSON(url, (data) => {
     weatherData = data;
-    resetVisuals(); //clears canvas
     let weatherId = weatherData.weather[0].id;
     if (weatherId >= 200 && weatherId <= 232) {
       weatherCondition = "thunder";
