@@ -47,3 +47,19 @@ button, input, span {
   color: white;
   text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
+
+@media (max-width: 768px) {
+  html, body {
+    padding: 10px;
+  }
+  button, input {
+    padding: 6px;
+    font-size: 12px;
+    margin: 0px 2px 5px 2px;
+     white-space: normal;
+  word-wrap: break-word;
+  }
+  span {
+    font-size: 11px;
+  }
+}

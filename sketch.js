@@ -876,3 +876,10 @@ function resetVisuals() {
   precipitation = [];
   humidityDroplets = [];
 }
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  initWind();
+  initHumidity();
+  initPrecipitation();
+}
