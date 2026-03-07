@@ -174,14 +174,20 @@ function setup() {
 
   //User interactivity
   // chaos slider and speed slider
-  let chaosLabel = createSpan("Chaos Slider: ");
+  let chaosWrapper = createDiv("");
+  let chaosLabel = createDiv("Chaos");
+  chaosLabel.parent(chaosWrapper);
   let chaosSlider = createSlider(0, 1, 0, 0.01);
+  chaosSlider.parent(chaosWrapper);
   chaosSlider.input(() => {
     chaos = chaosSlider.value();
   });
 
-  let speedLabel = createSpan("API Intervals: ");
-  let speedSlider = createSlider(5000, 60000, 30000, 1000); //put speed slider here for ordering
+  let speedWrapper = createDiv("");
+  let speedLabel = createDiv("API Interval");
+  speedLabel.parent(speedWrapper);
+  let speedSlider = createSlider(5000, 60000, 30000, 1000);
+  speedSlider.parent(speedWrapper);
   speedSlider.input(() => {
     tourInterval = speedSlider.value();
   });
@@ -720,13 +726,13 @@ function drawThermometer() {
 
     noStroke();
     fill(0, 0, 0, 150);
-   rect(x - 80, mouseY - 35, 110, 50, 8);
+    rect(x - 80, mouseY - 35, 110, 50, 8);
     fill(255, 255, 255, 220);
     textSize(18);
     textAlign(CENTER);
     textFont(myFont);
-   text(celsius + "°C", x - 25, mouseY - 12); 
-text(fahrenheit + "°F", x - 25, mouseY + 10);
+    text(celsius + "°C", x - 25, mouseY - 12);
+    text(fahrenheit + "°F", x - 25, mouseY + 10);
   }
   noStroke();
 

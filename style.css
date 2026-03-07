@@ -33,16 +33,7 @@ input:hover {
   background: rgba(255, 255, 255, 0.25);
   cursor: pointer;
 }
-span {
-  margin-left: 4px;
-  color: white;
-  font-family: "Amarante", serif;
-  font-size: 13px;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  vertical-align: middle;
-}
+
 button, input, span {
   color: white;
   text-shadow: 0 1px 3px rgba(0,0,0,0.8);
@@ -59,7 +50,24 @@ button, input, span {
      white-space: normal;
   word-wrap: break-word;
   }
-  span {
+  div {
     font-size: 11px;
   }
+}
+div {
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+  margin: 0 5px;
+  position: relative;
+  z-index: 2;
+}
+
+div div {
+  display: block;
+  color: white;
+  font-family: "Amarante", serif;
+  font-size: 13px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  margin-bottom: 3px;
 }
