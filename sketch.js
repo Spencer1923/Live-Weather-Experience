@@ -44,6 +44,7 @@ let stars = [];
 
 // arr for audio
 let sounds = {};
+let baseVolumes = {}; // stores original volumes
 
 let tourMode = "none"; //choose between cities, timezones, random
 let tourInterval = 7000; //ms between api calls
@@ -108,25 +109,37 @@ function preload() {
   //preload waether sounds
   sounds.thunder = loadSound("data/thunder.mp3");
   sounds.thunder.setVolume(0.8);
+  baseVolumes.thunder = 0.8;
+
   sounds.rain = loadSound("data/rain.mp3");
   sounds.rain.setVolume(0.3);
+  baseVolumes.rain = 0.3;
+
   sounds.drizzle = loadSound("data/drizzle.mp3");
   sounds.drizzle.setVolume(0.6);
+  baseVolumes.drizzle = 0.6;
+
   sounds.snow = loadSound("data/snow.mp3");
   sounds.snow.setVolume(0.4);
+  baseVolumes.snow = 0.4;
+
   sounds.clouds = loadSound("data/cloud.mp3");
   sounds.clouds.setVolume(1.2);
+  baseVolumes.clouds = 0.4;
 
   //default sounds if no weather conditions
   sounds.night = loadSound("data/night.mp3");
   sounds.night.setVolume(1.2);
+  baseVolumes.night = 1.2;
+
   sounds.day = loadSound("data/day.mp3");
   sounds.day.setVolume(1.4);
+  baseVolumes.day = 1.4;
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight); //size is whole window
-  document.body.style.background = "white";//i added this to stop overlay bleeding
+  document.body.style.background = "white"; //i added this to stop overlay bleeding
   userStartAudio(); //had to add this so sound auto starts playing
 
   //default value is toronto
@@ -288,6 +301,13 @@ function draw() {
     // brightness based on clouds
     brightness = 1 - (weatherData.clouds.all / 100) * 0.6;
 
+    //scales volume based on chaos level
+    Object.entries(sounds).forEach(([key, s]) => {
+      if (s.isPlaying() && baseVolumes[key]) {
+        s.setVolume(baseVolumes[key] * (1 + chaos * 0.5)); // chaos boosts volume up to 50%
+      }
+    });
+
     drawGradient(); //updates bg
     drawWind(); //draws wind lines
     drawPrecipitation(); //draws precipitarion
@@ -333,44 +353,89 @@ function convertLocalTime(second, timeZone) {
 
 //draws gradient for bg
 function drawGradient() {
+  let c = 1 + chaos * 0.5; // chaos color saturation boost of 0.5
   for (let y = 0; y < height; y++) {
     let gradientPosition = y / height; // 0 is top, 1 is bottom
     let top, bottom;
     //midnight
     if (sunPosition < 0 || sunPosition > 1) {
-      top = color(5 * brightness, 5 * brightness, 35 * brightness);
-      bottom = color(15 * brightness, 5 * brightness, 50 * brightness);
+      top = color(5 * brightness * c, 5 * brightness * c, 35 * brightness * c);
+      bottom = color(
+        15 * brightness * c,
+        5 * brightness * c,
+        50 * brightness * c
+      );
     }
 
     //early morning
     else if (sunPosition < 0.15) {
-      top = color(80 * brightness, 20 * brightness, 120 * brightness);
-      bottom = color(255 * brightness, 120 * brightness, 60 * brightness);
+      top = color(
+        80 * brightness * c,
+        20 * brightness * c,
+        120 * brightness * c
+      );
+      bottom = color(
+        255 * brightness * c,
+        120 * brightness * c,
+        60 * brightness * c
+      );
     }
 
     //morning
     else if (sunPosition < 0.35) {
-      top = color(255 * brightness, 160 * brightness, 50 * brightness);
-      bottom = color(255 * brightness, 220 * brightness, 120 * brightness);
+      top = color(
+        255 * brightness * c,
+        160 * brightness * c,
+        50 * brightness * c
+      );
+      bottom = color(
+        255 * brightness * c,
+        220 * brightness * c,
+        120 * brightness * c
+      );
     }
 
     //afternoon
     else if (sunPosition < 0.65) {
-      top = color(20 * brightness, 80 * brightness, 200 * brightness);
-      bottom = color(100 * brightness, 200 * brightness, 255 * brightness);
+      top = color(
+        20 * brightness * c,
+        80 * brightness * c,
+        200 * brightness * c
+      );
+      bottom = color(
+        100 * brightness * c,
+        200 * brightness * c,
+        255 * brightness * c
+      );
     }
 
     //evening
     else if (sunPosition < 0.85) {
-      top = color(255 * brightness, 100 * brightness, 50 * brightness);
-      bottom = color(255 * brightness, 180 * brightness, 80 * brightness);
+      top = color(
+        255 * brightness * c,
+        100 * brightness * c,
+        50 * brightness * c
+      );
+      bottom = color(
+        255 * brightness * c,
+        180 * brightness * c,
+        80 * brightness * c
+      );
     }
 
     //nighttime
     else {
       // dusk - deep magenta into midnight blue
-      top = color(100 * brightness, 20 * brightness, 80 * brightness);
-      bottom = color(20 * brightness, 10 * brightness, 60 * brightness);
+      top = color(
+        100 * brightness * c,
+        20 * brightness * c,
+        80 * brightness * c
+      );
+      bottom = color(
+        20 * brightness * c,
+        10 * brightness * c,
+        60 * brightness * c
+      );
     }
 
     stroke(lerpColor(top, bottom, gradientPosition));
@@ -658,7 +723,7 @@ function drawThermometer() {
     fill(0, 0, 0, 150);
     rect(x - 70, mouseY - 30, 90, 40, 8);
     fill(255, 255, 255, 220);
-    textSize(13);
+    textSize(15);
     textAlign(CENTER);
     textFont(myFont);
     text(celsius + "°C", x - 25, mouseY - 14);
