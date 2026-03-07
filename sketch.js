@@ -286,6 +286,7 @@ function setup() {
 }
 
 function draw() {
+  background(0);
   //check if its loaded
   if (weatherData) {
     //gets data form JSON
@@ -719,13 +720,13 @@ function drawThermometer() {
 
     noStroke();
     fill(0, 0, 0, 150);
-    rect(x - 70, mouseY - 30, 90, 40, 8);
+   rect(x - 80, mouseY - 35, 110, 50, 8);
     fill(255, 255, 255, 220);
-    textSize(15);
+    textSize(18);
     textAlign(CENTER);
     textFont(myFont);
-    text(celsius + "°C", x - 25, mouseY - 14);
-    text(fahrenheit + "°F", x - 25, mouseY + 4);
+   text(celsius + "°C", x - 25, mouseY - 12); 
+text(fahrenheit + "°F", x - 25, mouseY + 10);
   }
   noStroke();
 
@@ -800,7 +801,7 @@ function drawWelcome() {
 
   //small text
   textSize(20);
-  text("Mannualy Fetch Weather or Select a Preset Tour Mode Below", x, y + 37);
+  text("Mannualy Fetch Weather or Select a Preset Tour Mode Above", x, y + 37);
 }
 
 //for setting tour mode

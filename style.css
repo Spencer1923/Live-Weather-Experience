@@ -1,7 +1,4 @@
-@font-face {
-  font-family: "Amarante";
-  src: url("data/Amarante-Regular.ttf");
-}
+
 html,
 body {
   margin: 0;
@@ -45,4 +42,8 @@ span {
   z-index: 2;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   vertical-align: middle;
+}
+button, input, span {
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
