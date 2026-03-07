@@ -157,7 +157,6 @@ function setup() {
   let randomTourBtn = createButton("Random Tour");
   let timeZoneBtn = createButton("Time Zone Tour");
 
-
   cityBtn.mousePressed(() => {
     tourMode = "city";
     tourIndex = 0;

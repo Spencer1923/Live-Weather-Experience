@@ -2,7 +2,8 @@
   font-family: "Amarante";
   src: url("data/Amarante-Regular.ttf");
 }
-html, body {
+html,
+body {
   margin: 0;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -16,29 +17,32 @@ canvas {
   z-index: -1;
 }
 
-button, input {
+button,
+input {
   margin: 0px 3px 7px 3px;
   padding: 8px;
   position: relative;
   z-index: 2;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   color: inherit;
 }
 
-button:hover, input:hover {
-  background: rgba(255,255,255,0.25);
+button:hover,
+input:hover {
+  background: rgba(255, 255, 255, 0.25);
   cursor: pointer;
 }
 span {
+  margin-left: 4px;
   color: white;
   font-family: "Amarante", serif;
   font-size: 13px;
   position: relative;
   z-index: 2;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   vertical-align: middle;
 }
