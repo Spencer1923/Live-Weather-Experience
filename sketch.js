@@ -143,14 +143,17 @@ function setup() {
   userStartAudio(); //had to add this so sound auto starts playing
 
   //default value is toronto
+  let latWrapper = createDiv("");
+  let latLabel = createDiv("Latitude");
+  latLabel.parent(latWrapper);
   latInput = createInput("43.6532");
+  latInput.parent(latWrapper);
+
+  let lonWrapper = createDiv("");
+  let lonLabel = createDiv("Longitude");
+  lonLabel.parent(lonWrapper);
   lonInput = createInput("-79.3832");
-
-  //button to randomize weather data
-  let randomBtn = createButton("🎲");
-
-  //button to get call API
-  let btn = createButton("Fetch");
+  lonInput.parent(lonWrapper);
 
   //for modes
   let cityBtn = createButton("City Tour");
@@ -216,62 +219,6 @@ function setup() {
     fetchTour();
   });
 
-  //callback function
-  btn.mousePressed(() => {
-    //disable current tour
-    tourPaused = true;
-    tourMode = "none";
-
-    lat = float(latInput.value());
-    lon = float(lonInput.value());
-    let url =
-      "https://api.openweathermap.org/data/2.5/weather?lat=" +
-      lat +
-      "&lon=" +
-      lon +
-      "&appid=" +
-      key;
-    loadJSON(url, (data) => {
-      weatherData = data;
-      let weatherId = weatherData.weather[0].id;
-      if (weatherId >= 200 && weatherId <= 232) {
-        weatherCondition = "thunder";
-      } else if (weatherId >= 300 && weatherId <= 321) {
-        weatherCondition = "drizzle";
-      } else if (weatherId >= 500 && weatherId <= 531) {
-        weatherCondition = "rain";
-      } else if (weatherId >= 600 && weatherId <= 622) {
-        weatherCondition = "snow";
-      } else if (weatherId >= 700 && weatherId <= 781) {
-        weatherCondition = "atmosphere";
-      } else if (weatherId > 800 && weatherId <= 804) {
-        weatherCondition = "clouds";
-      } else if (weatherId == 800) {
-        weatherCondition = "clear";
-      }
-
-      //play correct sound
-      Object.values(sounds).forEach((s) => s.stop());
-      if (weatherCondition === "clear") {
-        let isDay =
-          weatherData.dt >= weatherData.sys.sunrise &&
-          weatherData.dt <= weatherData.sys.sunset;
-        isDay ? sounds.day.loop() : sounds.night.loop();
-      } else if (sounds[weatherCondition]) {
-        sounds[weatherCondition].loop();
-      }
-
-      resetVisuals();
-      //initilaize visualize functions
-      initWind();
-      initHumidity();
-      initPrecipitation();
-      //console.log(weatherData); //logs the JSON data
-      displayTime = convertLocalTime(weatherData.dt, weatherData.timezone);
-      displayCity = weatherData.name;
-    });
-  });
-
   //initliaze stars with pos, twinkle, size, twinklespeed
   for (let i = 0; i < 150; i++) {
     stars.push({
@@ -282,13 +229,6 @@ function setup() {
       twinkleSpeed: random(0.02, 0.08),
     });
   }
-
-  randomBtn.mousePressed(() => {
-    let randomLat = random(-90, 90).toFixed(4);
-    let randomLon = random(-180, 180).toFixed(4);
-    latInput.value(randomLat);
-    lonInput.value(randomLon);
-  });
 }
 
 function draw() {
@@ -807,7 +747,7 @@ function drawWelcome() {
 
   //small text
   textSize(20);
-  text("Mannualy Fetch Weather or Select a Preset Tour Mode Above", x, y + 37);
+  text("Select a Preset Tour Mode Above", x, y + 35);
 }
 
 //for setting tour mode
@@ -871,6 +811,9 @@ function fetchTour() {
     initPrecipitation();
     displayTime = convertLocalTime(weatherData.dt, weatherData.timezone);
     displayCity = weatherData.name;
+    //update coordinates
+    latInput.value(lat.toFixed(4));
+    lonInput.value(lon.toFixed(4));
   });
 
   lastTourTime = millis();
@@ -885,7 +828,9 @@ function resetVisuals() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  initWind();
-  initHumidity();
-  initPrecipitation();
+  if (weatherData) {
+    initWind();
+    initHumidity();
+    initPrecipitation();
+  }
 }
