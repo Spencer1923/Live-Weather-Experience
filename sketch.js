@@ -288,6 +288,7 @@ function setup() {
 }
 
 function draw() {
+  clear();
   //check if its loaded
   if (weatherData) {
     //gets data form JSON
