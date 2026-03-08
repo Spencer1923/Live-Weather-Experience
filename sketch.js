@@ -244,7 +244,7 @@ function draw() {
     sunPosition = (currentTime - sunrise) / (sunset - sunrise);
 
     // brightness based on clouds
-    brightness = 1 - (weatherData.clouds.all / 100) * 0.25;
+    brightness = 1 - (weatherData.clouds.all / 100) * 0.15;
 
     //scales volume based on chaos level
     Object.entries(sounds).forEach(([key, s]) => {
@@ -316,57 +316,60 @@ function drawGradient() {
       );
     }
     //early morning
-    else if (sunPosition < 0.15) {
-      top = color(
-        255 * brightness * c,
-        0 * brightness * c,
-        200 * brightness * c
-      );
-      bottom = color(
-        255 * brightness * c,
-        150 * brightness * c,
-        0 * brightness * c
-      );
-    }
-    //morning
-    else if (sunPosition < 0.35) {
-      top = color(
-        255 * brightness * c,
-        200 * brightness * c,
-        0 * brightness * c
-      );
-      bottom = color(
-        255 * brightness * c,
-        240 * brightness * c,
-        100 * brightness * c
-      );
-    }
-    //afternoon
-    else if (sunPosition < 0.65) {
-      top = color(
-        100 * brightness * c,
-        180 * brightness * c,
-        255 * brightness * c
-      );
-      bottom = color(
-        180 * brightness * c,
-        230 * brightness * c,
-        255 * brightness * c
-      );
-    }
-    //evening
-    else if (sunPosition < 0.85) {
-      top = color(
-        255 * brightness * c,
-        50 * brightness * c,
-        0 * brightness * c
-      );
-      bottom = color(
-        255 * brightness * c,
-        150 * brightness * c,
-        0 * brightness * c
-      );
-    }
+else if (sunPosition < 0.15) {
+  top = color(
+    1300 * brightness * c,
+    5 * brightness * c,
+    900 * brightness * c
+  );
+  bottom = color(
+    1500 * brightness * c,
+    120 * brightness * c,
+    10 * brightness * c
+  );
+}
+
+//morning (NO GREEN)
+else if (sunPosition < 0.35) {
+  top = color(
+    2200 * brightness * c,
+    200 * brightness * c,
+    0 * brightness * c
+  );
+  bottom = color(
+    2600 * brightness * c,
+    150 * brightness * c,
+    70 * brightness * c
+  );
+}
+
+//afternoon (baby sky blue)
+else if (sunPosition < 0.65) {
+  top = color(
+    80 * brightness * c,
+    140 * brightness * c,
+    2600 * brightness * c
+  );
+  bottom = color(
+    120 * brightness * c,
+    220 * brightness * c,
+    3200 * brightness * c
+  );
+}
+
+//evening (NO GREEN)
+else if (sunPosition < 0.85) {
+  top = color(
+    2200 * brightness * c,
+    150 * brightness * c,
+    70 * brightness * c
+  );
+  bottom = color(
+    2600 * brightness * c,
+    30 * brightness * c,
+    140 * brightness * c
+  );
+}
     //nighttime
     else {
       top = color(
