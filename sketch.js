@@ -244,7 +244,7 @@ function draw() {
     sunPosition = (currentTime - sunrise) / (sunset - sunrise);
 
     // brightness based on clouds
-    brightness = 1 - (weatherData.clouds.all / 100) * 0.6;
+    brightness = 1 - (weatherData.clouds.all / 100) * 0.25;
 
     //scales volume based on chaos level
     Object.entries(sounds).forEach(([key, s]) => {
@@ -304,85 +304,82 @@ function drawGradient() {
     let top, bottom;
     //midnight
     if (sunPosition < 0 || sunPosition > 1) {
-      top = color(5 * brightness * c, 5 * brightness * c, 35 * brightness * c);
+      top = color(
+        30 * brightness * c,
+        30 * brightness * c,
+        100 * brightness * c
+      );
       bottom = color(
-        15 * brightness * c,
-        5 * brightness * c,
-        50 * brightness * c
+        50 * brightness * c,
+        30 * brightness * c,
+        130 * brightness * c
       );
     }
-
     //early morning
     else if (sunPosition < 0.15) {
       top = color(
-        80 * brightness * c,
-        20 * brightness * c,
-        120 * brightness * c
+        255 * brightness * c,
+        0 * brightness * c,
+        200 * brightness * c
       );
       bottom = color(
         255 * brightness * c,
-        120 * brightness * c,
-        60 * brightness * c
+        150 * brightness * c,
+        0 * brightness * c
       );
     }
-
     //morning
     else if (sunPosition < 0.35) {
       top = color(
         255 * brightness * c,
-        160 * brightness * c,
-        50 * brightness * c
+        200 * brightness * c,
+        0 * brightness * c
       );
       bottom = color(
         255 * brightness * c,
-        220 * brightness * c,
-        120 * brightness * c
+        240 * brightness * c,
+        100 * brightness * c
       );
     }
-
     //afternoon
     else if (sunPosition < 0.65) {
       top = color(
-        20 * brightness * c,
-        80 * brightness * c,
-        200 * brightness * c
+        100 * brightness * c,
+        180 * brightness * c,
+        255 * brightness * c
       );
       bottom = color(
-        100 * brightness * c,
-        200 * brightness * c,
+        180 * brightness * c,
+        230 * brightness * c,
         255 * brightness * c
       );
     }
-
     //evening
     else if (sunPosition < 0.85) {
       top = color(
         255 * brightness * c,
-        100 * brightness * c,
-        50 * brightness * c
+        50 * brightness * c,
+        0 * brightness * c
       );
       bottom = color(
         255 * brightness * c,
-        180 * brightness * c,
-        80 * brightness * c
+        150 * brightness * c,
+        0 * brightness * c
       );
     }
-
     //nighttime
     else {
-      // dusk - deep magenta into midnight blue
       top = color(
-        100 * brightness * c,
+        80 * brightness * c,
         20 * brightness * c,
         80 * brightness * c
       );
       bottom = color(
-        20 * brightness * c,
+        30 * brightness * c,
         10 * brightness * c,
         60 * brightness * c
       );
     }
-
     stroke(lerpColor(top, bottom, gradientPosition));
     line(0, y, width, y);
   }
@@ -778,6 +775,10 @@ function fetchTour() {
     "&appid=" +
     key;
   loadJSON(url, (data) => {
+    if (data.name === "") {
+      fetchTour();
+      return;
+    }
     weatherData = data;
     let weatherId = weatherData.weather[0].id;
     if (weatherId >= 200 && weatherId <= 232) {
@@ -811,6 +812,10 @@ function fetchTour() {
     initPrecipitation();
     displayTime = convertLocalTime(weatherData.dt, weatherData.timezone);
     displayCity = weatherData.name;
+    if (displayCity === "") {
+      fetchTour();
+      return;
+    }
     //update coordinates
     latInput.value(lat.toFixed(4));
     lonInput.value(lon.toFixed(4));
@@ -826,6 +831,7 @@ function resetVisuals() {
   humidityDroplets = [];
 }
 
+//for mobile support
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   if (weatherData) {
