@@ -331,7 +331,7 @@ function drawGradient() {
       );
     }
 
-    //morning (NO GREEN)
+    //morning
     else if (sunPosition < 0.35) {
       top = color(
         2200 * brightness * c,
@@ -345,7 +345,7 @@ function drawGradient() {
       );
     }
 
-    //afternoon (baby sky blue)
+    //afternoon
     else if (sunPosition < 0.65) {
       top = color(
         80 * brightness * c,
@@ -359,7 +359,7 @@ function drawGradient() {
       );
     }
 
-    //evening (NO GREEN)
+    //evening
     else if (sunPosition < 0.85) {
       top = color(
         2200 * brightness * c,
@@ -374,15 +374,18 @@ function drawGradient() {
     }
     //nighttime
     else {
+      // top = deeper night blue
       top = color(
         80 * brightness * c,
-        20 * brightness * c,
-        80 * brightness * c
+        60 * brightness * c,
+        1200 * brightness * c
       );
+
+      // bottom = subtle violet horizon
       bottom = color(
-        30 * brightness * c,
-        10 * brightness * c,
-        60 * brightness * c
+        260 * brightness * c,
+        70 * brightness * c,
+        400 * brightness * c
       );
     }
     stroke(lerpColor(top, bottom, gradientPosition));
@@ -791,7 +794,7 @@ function fetchTour() {
       return;
     }
     weatherData = data;
-    // console.log(weatherData);
+    //console.log(weatherData);
     let weatherId = weatherData.weather[0].id;
     if (weatherId >= 200 && weatherId <= 232) {
       weatherCondition = "thunder";
