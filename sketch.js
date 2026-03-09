@@ -200,7 +200,9 @@ function setup() {
   backBtn.style("font-size", "15px");
   backBtn.style("margin-left", "5px");
   backBtn.mousePressed(() => {
-    tourIndex = (tourIndex - 2 + cities.length) % cities.length;
+    let arr = tourMode === "timezone" ? timeZones : cities;
+    if (tourIndex <= 1) return; //make sure you cant go back from 0
+    tourIndex = (tourIndex - 2 + arr.length) % arr.length;
     fetchTour();
   });
 
@@ -244,7 +246,7 @@ function draw() {
     sunPosition = (currentTime - sunrise) / (sunset - sunrise);
 
     // brightness based on clouds
-    brightness = 1 - (weatherData.clouds.all / 100) * 0.15;
+    brightness = 1 - (weatherData.clouds.all / 100) * 0.25;
 
     //scales volume based on chaos level
     Object.entries(sounds).forEach(([key, s]) => {
@@ -316,60 +318,60 @@ function drawGradient() {
       );
     }
     //early morning
-else if (sunPosition < 0.15) {
-  top = color(
-    1300 * brightness * c,
-    5 * brightness * c,
-    900 * brightness * c
-  );
-  bottom = color(
-    1500 * brightness * c,
-    120 * brightness * c,
-    10 * brightness * c
-  );
-}
+    else if (sunPosition < 0.15) {
+      top = color(
+        1300 * brightness * c,
+        5 * brightness * c,
+        900 * brightness * c
+      );
+      bottom = color(
+        1500 * brightness * c,
+        120 * brightness * c,
+        10 * brightness * c
+      );
+    }
 
-//morning (NO GREEN)
-else if (sunPosition < 0.35) {
-  top = color(
-    2200 * brightness * c,
-    200 * brightness * c,
-    0 * brightness * c
-  );
-  bottom = color(
-    2600 * brightness * c,
-    150 * brightness * c,
-    70 * brightness * c
-  );
-}
+    //morning (NO GREEN)
+    else if (sunPosition < 0.35) {
+      top = color(
+        2200 * brightness * c,
+        200 * brightness * c,
+        0 * brightness * c
+      );
+      bottom = color(
+        2600 * brightness * c,
+        150 * brightness * c,
+        70 * brightness * c
+      );
+    }
 
-//afternoon (baby sky blue)
-else if (sunPosition < 0.65) {
-  top = color(
-    80 * brightness * c,
-    140 * brightness * c,
-    2600 * brightness * c
-  );
-  bottom = color(
-    120 * brightness * c,
-    220 * brightness * c,
-    3200 * brightness * c
-  );
-}
+    //afternoon (baby sky blue)
+    else if (sunPosition < 0.65) {
+      top = color(
+        80 * brightness * c,
+        140 * brightness * c,
+        2600 * brightness * c
+      );
+      bottom = color(
+        120 * brightness * c,
+        220 * brightness * c,
+        3200 * brightness * c
+      );
+    }
 
-//evening (NO GREEN)
-else if (sunPosition < 0.85) {
-  top = color(
-    2200 * brightness * c,
-    150 * brightness * c,
-    70 * brightness * c
-  );
-  bottom = color(
-    2600 * brightness * c,
-    30 * brightness * c,
-    140 * brightness * c
-  );
-}
+    //evening (NO GREEN)
+    else if (sunPosition < 0.85) {
+      top = color(
+        2200 * brightness * c,
+        150 * brightness * c,
+        70 * brightness * c
+      );
+      bottom = color(
+        2600 * brightness * c,
+        30 * brightness * c,
+        140 * brightness * c
+      );
+    }
     //nighttime
     else {
       top = color(
@@ -551,9 +553,15 @@ function drawPrecipitation() {
 
 function drawFog() {
   let visibility = weatherData.visibility; //gets it from JSON
+
   //visibility is 0-10000
   let fogOpacity =
     visibility === 0 ? 0.7 : max(0, (10000 - visibility) / 10000) * 0.3; //scales opacity from 0 to 0.95
+
+  // grey overlay based on cloud cover
+  let cloudOpacity = map(weatherData.clouds.all, 50, 100, 0, 0.4);
+
+  fogOpacity = max(fogOpacity, cloudOpacity);
   if (fogOpacity > 0.1) {
     noStroke();
     fill(160, 160, 160, fogOpacity * 255); //alpha channel is 0-255 not 1
@@ -783,6 +791,7 @@ function fetchTour() {
       return;
     }
     weatherData = data;
+    // console.log(weatherData);
     let weatherId = weatherData.weather[0].id;
     if (weatherId >= 200 && weatherId <= 232) {
       weatherCondition = "thunder";
